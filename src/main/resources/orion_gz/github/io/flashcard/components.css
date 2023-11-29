@@ -1,0 +1,18 @@
+
+
+.jfx-text-area .viewport {
+    -fx-background-color: #F4F4F4;
+}
+
+.custom-jfx-list-view1 {
+    -jfx-vertical-gap: 10.0;
+    -fx-padding: 0 5 0 5;
+    -jfx-expanded: true;
+    -fx-pref-width: 150px;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.custom-jfx-list-view1 .list-cell {
+    -fx-background-radius: 5;
+}

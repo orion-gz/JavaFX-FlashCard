@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orion_gz.github.io.flashcard.MemorizeController">
+   <children>
+      <VBox prefHeight="300.0" prefWidth="450.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="450.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="Memorize!">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="title" text="NULL">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="450.0">
+               <children>
+                  <Label fx:id="word" text="Word">
+                     <font>
+                        <Font name="System Bold" size="25.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="hint" alignment="CENTER" contentDisplay="CENTER" maxWidth="250.0" prefHeight="30.0" prefWidth="250.0" text="Hint" textAlignment="CENTER">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="15.0" top="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <JFXButton fx:id="showAnswerBtn" buttonType="RAISED" maxHeight="40.0" maxWidth="40.0" prefHeight="40.0" prefWidth="40.0" />
+                  <Label fx:id="answer" alignment="CENTER" contentDisplay="CENTER" maxHeight="30.0" maxWidth="250.0" prefHeight="30.0" prefWidth="250.0" text="Answer" textAlignment="CENTER" visible="false">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="15.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+            </VBox>
+            <HBox prefHeight="50.0" prefWidth="450.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="225.0">
+                     <children>
+                        <JFXButton fx:id="closeDialogBtn" buttonType="RAISED" text="CLOSE">
+                           <HBox.margin>
+                              <Insets left="15.0" />
+                           </HBox.margin>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="225.0">
+                     <children>
+                        <JFXButton fx:id="prevBtn" buttonType="RAISED" text="Prev">
+                           <HBox.margin>
+                              <Insets right="15.0" />
+                           </HBox.margin>
+                        </JFXButton>
+                        <JFXButton fx:id="nextBtn" buttonType="RAISED" text="Next">
+                           <HBox.margin>
+                              <Insets right="15.0" />
+                           </HBox.margin>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
