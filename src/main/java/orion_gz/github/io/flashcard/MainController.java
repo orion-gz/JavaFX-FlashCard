@@ -20,9 +20,12 @@ import static javafx.animation.Interpolator.EASE_BOTH;
 
 public class MainController {
     private Stage stage;
+
+    /* data member */
     private Data.FlashCardSet selectedSet;
     private Data.FlashCard selectedCard;
     private ObservableList<Data.FlashCardSet> flashCardSets;
+    /* data member */
 
     /* Layout */
     @FXML
@@ -95,10 +98,12 @@ public class MainController {
     JFXTextArea memoTextArea;
     /* TextArea */
 
+    // get stage from main class
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    // initialize function
     @FXML
     public void initialize() {
         initWindow();
@@ -106,22 +111,30 @@ public class MainController {
         initCardList();
     }
 
+    // get data and set item in list
     private void initCardList() {
+        // data from ObjectInputStream - FileInputStream
         flashCardSets = Data.readFlashCards();
         setsListView.setItems(flashCardSets);
+
+        // list select event
         setsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectedSet = newValue;
             showFlashCards(newValue);
         });
+
+        // list select event
         cardsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectedCard = newValue;
             showCardDefinition(newValue);
         });
 
+        // add/remove set event
         addSetBtn.setOnAction((e) -> new AddSetController().displayAddDialog(flashCardSets, setsListView));
-        removeSetBtn.setOnAction((e) -> new CardSets().showRemoveSet(setsListView.getSelectionModel().getSelectedItem(), flashCardSets, setsListView, cardsListView));
+        removeSetBtn.setOnAction((e) -> new AddSetController().removeSet(setsListView.getSelectionModel().getSelectedItem(), flashCardSets, setsListView, cardsListView));
     }
 
+    // initialize toolbar (quiz btn, memorize btn, close btn)
     private void initWindow() {
         // Quiz Mode Button
         quizBtn.setOnAction((e) -> new QuizController().displayQuizDialog(selectedSet));
@@ -138,6 +151,7 @@ public class MainController {
         closeWindowBtn.setOnAction((e) -> stage.close());
     }
 
+    // initialize setsListView, cardsListView to card ui
     private void initCardUI() {
         JFXDepthManager.setDepth(definitionArea, 2);
         ObservableList<VBox> listCard = FXCollections.observableArrayList(listCard1, listCard2);
@@ -205,6 +219,7 @@ public class MainController {
         }
     }
 
+    // get color
     private static String getDefaultColor(int i) {
         String color = "#FFFFFF";
         switch (i) {
@@ -253,6 +268,7 @@ public class MainController {
         return color;
     }
 
+    // show flash card in selected set
     private void showFlashCards(Data.FlashCardSet selectedSet) {
         if (!selectedSet.isEmpty()) {
             initView();
@@ -277,13 +293,14 @@ public class MainController {
         });
     }
 
+    // set in setsListView is Empty, than disable quiz btn
     private void setQuizStatus(boolean status) {
         if (status)
             quizBtn.setDisable(false);
         else
             quizBtn.setDisable(true);
     }
-
+    // set in setsListView is Empty, than disable memorize btn
     private void setMemorizeStatus(boolean status) {
         if (status)
             memorizeBtn.setDisable(false);
@@ -291,10 +308,12 @@ public class MainController {
             memorizeBtn.setDisable(true);
     }
 
+    // update listview
     private void updateCardsListView(Data.FlashCardSet selectedSet) {
         cardsListView.setItems(selectedSet.getCards());
     }
 
+    // initalize view visible
     private void initView() {
         //cardsListArea.setVisible(true);
         setQuizStatus(true);
@@ -302,6 +321,8 @@ public class MainController {
         definitionArea.setVisible(true);
         clearTextArea();
     }
+
+    // clear textarea
     private void clearTextArea() {
         wordTextArea.clear();
         definitionTextArea.clear();
@@ -309,12 +330,14 @@ public class MainController {
         memoTextArea.clear();
     }
 
+    // save new card
     private void saveNewCardData(Data.FlashCardSet selectedSet) {
         Data.FlashCard newCard = new Data.FlashCard(wordTextArea.getText(), definitionTextArea.getText(), hintTextArea.getText(), memoTextArea.getText());
         selectedSet.addCard(newCard);
         Data.saveFlashCards(flashCardSets);
     }
 
+    // edit card
     private void editCardData(Data.FlashCard selectedCard) {
         selectedCard.setWord(wordTextArea.getText());
         selectedCard.setDefinition(definitionTextArea.getText());
@@ -323,6 +346,7 @@ public class MainController {
         Data.saveFlashCards(flashCardSets);
     }
 
+    // remove card
     private void removeSelectedCard(Data.FlashCard selectedCard) {
         Data.FlashCardSet selectedSet = setsListView.getSelectionModel().getSelectedItem();
         if (selectedSet != null && selectedCard != null) {
@@ -331,12 +355,13 @@ public class MainController {
         }
     }
 
+    // show card definition(word, definition, hint, memo)
     private void showCardDefinition(Data.FlashCard selectedCard) {
         if (selectedCard != null) {
             wordTextArea.setText(selectedCard.getWord());
             definitionTextArea.setText(selectedCard.getDefinition());
             hintTextArea.setText(selectedCard.getHint());
-            memoTextArea.setText(selectedCard.getHint());
+            memoTextArea.setText(selectedCard.getMemo());
 
             saveBtn.setOnAction((e) -> {
                 editCardData(selectedCard);

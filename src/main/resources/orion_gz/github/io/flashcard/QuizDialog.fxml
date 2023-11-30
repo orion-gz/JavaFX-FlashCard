@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -36,7 +37,7 @@
                   <Insets />
                </VBox.margin>
             </HBox>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="450.0">
+            <VBox fx:id="quizArea" alignment="CENTER" prefHeight="200.0" prefWidth="450.0">
                <children>
                   <Label fx:id="word" text="Word">
                      <font>
@@ -91,5 +92,52 @@
             </HBox>
          </children>
       </VBox>
+      <HBox fx:id="resultArea" layoutX="2.0" layoutY="50.0" prefHeight="200.0" prefWidth="450.0" visible="false">
+         <children>
+            <JFXListView fx:id="quizList" depth="1" styleClass="custom-jfx-list-view1">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="15.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </JFXListView>
+            <VBox prefHeight="200.0" prefWidth="230.0">
+               <children>
+                  <Label fx:id="selectWord" text="Word">
+                     <VBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label text="Answer">
+                     <VBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="answerOfWord" text="Label">
+                     <VBox.margin>
+                        <Insets left="10.0" top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="MyAnswer">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="30.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="myAnswerOfWord" text="Label">
+                     <VBox.margin>
+                        <Insets left="10.0" top="5.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

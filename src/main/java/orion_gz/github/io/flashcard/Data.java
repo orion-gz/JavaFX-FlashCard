@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
 
+// FlashCard Data Class
 public class Data {
+    // file name
     private static final String SETS_FILE = "flashcardSets.dat";
 
+    // read file from data file
     public static ObservableList<FlashCardSet> readFlashCards() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(SETS_FILE))) {
             ObservableList<FlashCardSet> loadedSets = FXCollections.observableArrayList();
@@ -30,6 +33,7 @@ public class Data {
         return FXCollections.observableArrayList();
     }
 
+    // save flashcard file
     public static void saveFlashCards(ObservableList<FlashCardSet> flashCardSets) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SETS_FILE))) {
             for (FlashCardSet flashCardSet : flashCardSets) {
@@ -40,6 +44,7 @@ public class Data {
         }
     }
 
+    // user defined data type
     public static class FlashCardSet implements Serializable {
         private String setName;
         private ObservableList<FlashCard> cards;
@@ -84,6 +89,7 @@ public class Data {
         }
     }
 
+    // user defined data type
     public static class FlashCard implements Serializable {
 
         private String word;

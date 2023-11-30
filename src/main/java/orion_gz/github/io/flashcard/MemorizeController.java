@@ -19,17 +19,17 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-import java.util.Collection;
-
 import static javafx.animation.Interpolator.EASE_BOTH;
 
 public class MemorizeController {
     private Stage stage;
+    /* data member */
     private Data.FlashCardSet set;
     private ObservableList<Data.FlashCard> memorizeCards;
     private int memorizeNum;
     private int idx;
     private boolean answerVisible;
+    /* data member */
 
     /* Label */
     @FXML
@@ -59,6 +59,7 @@ public class MemorizeController {
     JFXButton prevBtn;
     /* Button */
 
+    // display dialog
     public void displayMemorizeDialog(Data.FlashCardSet set) {
         this.set = set;
         answerVisible = false;
@@ -145,6 +146,7 @@ public class MemorizeController {
         initUI();
     }
 
+    // initialize ui components and events
     private void initUI() {
         showAnswerBtn.setStyle("-fx-background-radius: 40;-fx-background-color: #4CAF50;");
         showAnswerBtn.setPrefSize(40, 40);
@@ -171,6 +173,7 @@ public class MemorizeController {
         animation.play();
     }
 
+    // start memorize
     private void startMemorize() {
         memorizeCards = FXCollections.observableArrayList(set.getCards());
         FXCollections.shuffle(memorizeCards);
@@ -179,6 +182,7 @@ public class MemorizeController {
         showCard(memorizeCards.get(idx));
     }
 
+    // show memorize card
     private void showCard(Data.FlashCard card) {
         word.setText(card.getWord());
         hint.setText(card.getHint());

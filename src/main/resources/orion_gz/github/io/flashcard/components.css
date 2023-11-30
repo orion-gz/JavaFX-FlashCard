@@ -16,3 +16,8 @@
 .custom-jfx-list-view1 .list-cell {
     -fx-background-radius: 5;
 }
+
+.custom-jfx-list-view1 .scroll-bar:vertical {
+    -fx-pref-width: 0;
+    -fx-scale-x: 0;
+}

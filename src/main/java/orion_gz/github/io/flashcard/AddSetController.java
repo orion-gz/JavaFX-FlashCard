@@ -9,20 +9,24 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class AddSetController {
+    /* Text Area */
     @FXML
     JFXTextArea setName;
 
+    /* Button */
     @FXML
     JFXButton cancelBtn;
 
     @FXML
     JFXButton okBtn;
+    /* Button */
 
+    // display dialog
+    // add flash card set dialog
     public void displayAddDialog(ObservableList<Data.FlashCardSet> flashCardSets, JFXListView<Data.FlashCardSet> setsListView) {
         Stage stage = new Stage();
         stage.initStyle(StageStyle.UNDECORATED);
@@ -54,6 +58,16 @@ public class AddSetController {
         }
         catch(Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    // remove flashcard set
+    public void removeSet(Data.FlashCardSet selectedSet, ObservableList<Data.FlashCardSet> flashCardSets, JFXListView<Data.FlashCardSet> setsListView, JFXListView<Data.FlashCard> cardsListView) {
+        if (selectedSet != null) {
+            flashCardSets.remove(selectedSet);
+            Data.saveFlashCards(flashCardSets);
+            setsListView.getSelectionModel().clearSelection();
+            cardsListView.getItems().clear();
         }
     }
 }

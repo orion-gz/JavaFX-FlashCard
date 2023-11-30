@@ -2,6 +2,7 @@ package orion_gz.github.io.flashcard;
 
 import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.svg.SVGGlyph;
 import javafx.animation.KeyFrame;
@@ -14,25 +15,30 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static javafx.animation.Interpolator.EASE_BOTH;
 
 public class QuizController {
     private Stage stage;
+    private Scene scene;
+
+    /* data member */
     private Data.FlashCardSet set;
     private ObservableList<Data.FlashCard> quizCards;
-    private List<String> myAnswer;
+    private HashMap<String, String> answers;
+    private HashMap<String, String> myAnswer;
     private int quizNum;
     private int idx;
     private boolean hintVisible;
+    /* data member */
 
     /* Label */
     @FXML
@@ -43,10 +49,32 @@ public class QuizController {
 
     @FXML
     Label hint;
-    /* Label */
 
     @FXML
+    Label selectWord;
+
+    @FXML
+    Label answerOfWord;
+
+    @FXML
+    Label myAnswerOfWord;
+    /* Label */
+
+    /* Text Area */
+    @FXML
     JFXTextArea answerTextArea;
+    /* Text Area */
+
+    /* View and Layout */
+    @FXML
+    JFXListView<String> quizList;
+
+    @FXML
+    VBox quizArea;
+
+    @FXML
+    HBox resultArea;
+    /* View and Layout */
 
     /* Button */
     @FXML
@@ -62,81 +90,29 @@ public class QuizController {
     JFXButton prevBtn;
     /* Button */
 
+    // display dialog
     public void displayQuizDialog(Data.FlashCardSet set) {
         this.set = set;
         hintVisible = false;
         stage = new Stage();
         stage.initStyle(StageStyle.UNDECORATED);
 
+        answers = new HashMap<String, String>();
+        myAnswer = new HashMap<String, String>();
+
         try {
+            // fxml file to load ui
             FXMLLoader loader = new FXMLLoader(getClass().getResource("QuizDialog.fxml"));
             Parent dialog = loader.load();
-            Scene scene = new Scene(dialog);
+            scene = new Scene(dialog);
 
             final ObservableList<String> stylesheets = scene.getStylesheets();
             stylesheets.addAll(JFoenixResources.load("css/jfoenix-fonts.css").toExternalForm(),
                     JFoenixResources.load("css/jfoenix-design.css").toExternalForm(),
                     QuizController.class.getResource("components.css").toExternalForm());
             stage.setScene(scene);
-
-            title = (Label) scene.lookup("#title");
-            title.setText(set.getSetName());
-
-            word = (Label) scene.lookup("#word");
-            hint = (Label) scene.lookup("#hint");
-
-            showHintBtn = (JFXButton) scene.lookup("#showHintBtn");
-            showHintBtn.setOnAction((e) -> {
-                if (hintVisible) {
-                    hint.setVisible(false);
-                    hintVisible = false;
-                }
-                else {
-                    hint.setVisible(true);
-                    hintVisible = true;
-                }
-            });
-
-            closeDialogBtn = (JFXButton) scene.lookup("#closeDialogBtn");
-            closeDialogBtn.setOnAction((e) -> stage.close());
-
+            initUI();
             startQuiz();
-
-            prevBtn = (JFXButton) scene.lookup("#prevBtn");
-            prevBtn.setDisable(true);
-            prevBtn.setOnAction((e) -> {
-                if (idx > 0) {
-                    showCard(quizCards.get(--idx));
-                    hintVisible = false;
-                    hint.setVisible(false);
-                    prevBtn.setDisable(false);
-                    if (idx < quizNum)
-                        nextBtn.setText("Next");
-                    if (idx == 0)
-                        prevBtn.setDisable(true);
-                }
-                else
-                    prevBtn.setDisable(true);
-            });
-
-            nextBtn = (JFXButton) scene.lookup("#nextBtn");
-            nextBtn.setOnAction((e) -> {
-                if (idx < quizNum - 1) {
-                    showCard(quizCards.get(++idx));
-                    hintVisible = false;
-                    hint.setVisible(false);
-                    prevBtn.setDisable(false);
-                    nextBtn.setDisable(false);
-                    answerTextArea.getText();
-                    answerTextArea.clear();
-                    if (idx == quizNum - 1)
-                        nextBtn.setText("Complete");
-                }
-                else {
-                    stage.close();
-                }
-            });
-
             stage.show();
         }
         catch(Exception e) {
@@ -146,10 +122,137 @@ public class QuizController {
 
     @FXML
     public void initialize() {
-        initUI();
     }
 
+    // initialize ui components and events
     private void initUI() {
+        quizArea = (VBox) scene.lookup("#quizArea");
+        resultArea = (HBox) scene.lookup("#resultArea");
+
+        selectWord = (Label) scene.lookup("#selectWord");
+        myAnswerOfWord = (Label) scene.lookup("#myAnswerOfWord");
+        answerOfWord = (Label) scene.lookup("#answerOfWord");
+
+        title = (Label) scene.lookup("#title");
+        title.setText(set.getSetName());
+
+        word = (Label) scene.lookup("#word");
+        hint = (Label) scene.lookup("#hint");
+
+        showHintBtn = (JFXButton) scene.lookup("#showHintBtn");
+        setFabBtnUI();
+        showHintBtn.setOnAction((e) -> {
+            if (hintVisible) {
+                hint.setVisible(false);
+                hintVisible = false;
+            }
+            else {
+                hint.setVisible(true);
+                hintVisible = true;
+            }
+        });
+
+        closeDialogBtn = (JFXButton) scene.lookup("#closeDialogBtn");
+        closeDialogBtn.setOnAction((e) -> stage.close());
+
+        answerTextArea = (JFXTextArea) scene.lookup("#answerTextArea");
+
+        prevBtn = (JFXButton) scene.lookup("#prevBtn");
+        prevBtn.setDisable(true);
+        prevBtn.setOnAction((e) -> {
+            if (idx > 0) {
+                Data.FlashCard card = quizCards.get(--idx);
+                showCard(card);
+                if (myAnswer.containsKey(card.getWord()))
+                    answerTextArea.setText(myAnswer.get(card.getWord()));
+                hintVisible = false;
+                hint.setVisible(false);
+                prevBtn.setDisable(false);
+                if (idx < quizNum)
+                    nextBtn.setText("Next");
+                if (idx == 0)
+                    prevBtn.setDisable(true);
+            }
+            else
+                prevBtn.setDisable(true);
+        });
+
+        nextBtn = (JFXButton) scene.lookup("#nextBtn");
+        nextBtn.setOnAction((e) -> {
+            if (idx < quizNum - 1) {
+                myAnswer.put(quizCards.get(idx).getWord(), answerTextArea.getText());
+                Data.FlashCard card = quizCards.get(++idx);
+                showCard(card);
+                if (myAnswer.containsKey(card.getWord()))
+                    answerTextArea.setText(myAnswer.get(card.getWord()));
+                hintVisible = false;
+                hint.setVisible(false);
+                prevBtn.setDisable(false);
+                nextBtn.setDisable(false);
+                if (idx == quizNum - 1) {
+
+                    nextBtn.setText("Complete");
+                    prevBtn.setDisable(true);
+                }
+                answerTextArea.clear();
+            }
+            else {
+                myAnswer.put(quizCards.get(idx).getWord(), answerTextArea.getText());
+                showQuizResult();
+            }
+        });
+    }
+
+    // start quiz
+    private void startQuiz() {
+        quizCards = FXCollections.observableArrayList(set.getCards());
+        FXCollections.shuffle(quizCards);
+        quizNum = quizCards.size();
+        idx = 0;
+        showCard(quizCards.get(idx));
+    }
+
+    // show quiz result
+    private void showQuizResult() {
+        quizArea.setVisible(false);
+        resultArea.setVisible(true);
+
+        quizList = (JFXListView) scene.lookup("#quizList");
+
+        ObservableList<String> quiz = FXCollections.observableArrayList();
+        quiz.addAll(answers.keySet());
+        quizList.setItems(quiz);
+        quizList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            showQuizResultCard(newValue);
+        });
+        quizList.getSelectionModel().selectFirst();
+        nextBtn.setOnAction((e) -> stage.close());
+    }
+
+    // show result card
+    private void showQuizResultCard(String word) {
+        selectWord.setText(word);
+        System.out.println(myAnswer);
+        if (answers != null && answers.containsKey(word))
+            answerOfWord.setText(answers.get(word));
+        else
+            answerOfWord.setText("Definition not available");
+
+        if (myAnswer != null && myAnswer.containsKey(word))
+            myAnswerOfWord.setText(myAnswer.get(word));
+        else
+            myAnswerOfWord.setText("Answer not available");
+    }
+
+    // show quiz card
+    private void showCard(Data.FlashCard card) {
+        word.setText(card.getWord());
+        hint.setText(card.getHint());
+        answers.put(card.getWord(), card.getDefinition());
+    }
+
+    // set fab btn
+    private void setFabBtnUI() {
         showHintBtn.setStyle("-fx-background-radius: 40;-fx-background-color: #4CAF50;");
         showHintBtn.setPrefSize(40, 40);
 
@@ -171,21 +274,7 @@ public class QuizController {
                 new KeyValue(showHintBtn.scaleYProperty(),
                         1,
                         EASE_BOTH)));
-        animation.setDelay(Duration.millis(100 * 1 + 1000));
+        animation.setDelay(Duration.millis(750));
         animation.play();
-    }
-
-    private void startQuiz() {
-        quizCards = FXCollections.observableArrayList(set.getCards());
-        FXCollections.shuffle(quizCards);
-        quizNum = quizCards.size();
-        myAnswer = new ArrayList<>();
-        idx = 0;
-        showCard(quizCards.get(idx));
-    }
-
-    private void showCard(Data.FlashCard card) {
-        word.setText(card.getWord());
-        hint.setText(card.getHint());
     }
 }
