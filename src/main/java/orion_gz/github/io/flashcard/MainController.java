@@ -366,6 +366,8 @@ public class MainController {
             saveBtn.setOnAction((e) -> {
                 editCardData(selectedCard);
             });
+
+            removeItemBtn.setOnAction((e) -> removeSelectedCard(selectedCard));
         } else {
             definitionTextArea.setText("");
         }

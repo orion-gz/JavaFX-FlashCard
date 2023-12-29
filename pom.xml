@@ -12,23 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.9.2</junit.version>
-        <!--
-        <gluonfx.plugin.version>1.0.21</gluonfx.plugin.version>
-        <charm.version>6.2.3</charm.version>
-        <attach.version>4.0.19</attach.version>
-        -->
     </properties>
-
-    <!--
-    <repositories>
-        <repository>
-            <id>charm-glisten</id>
-            <name>charm-glisten Repository</name>
-            <url>https://nexus.gluonhq.com/nexus/content/repositories/releases/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
-    -->
 
     <dependencyManagement>
         <dependencies>
@@ -78,66 +62,10 @@
             <artifactId>datafx</artifactId>
             <version>8.0.1</version>
         </dependency>
-
-        <!--
-        <dependency>
-            <groupId>com.gluonhq</groupId>
-            <artifactId>charm-glisten</artifactId>
-            <version>${charm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.attach</groupId>
-            <artifactId>display</artifactId>
-            <version>${attach.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.attach</groupId>
-            <artifactId>lifecycle</artifactId>
-            <version>${attach.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.attach</groupId>
-            <artifactId>position</artifactId>
-            <version>${attach.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.attach</groupId>
-            <artifactId>statusbar</artifactId>
-            <version>${attach.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.attach</groupId>
-            <artifactId>storage</artifactId>
-            <version>${attach.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.attach</groupId>
-            <artifactId>util</artifactId>
-            <version>${attach.version}</version>
-        </dependency>
-        -->
     </dependencies>
 
     <build>
         <plugins>
-            <!--
-            <plugin>
-                <groupId>com.gluonhq</groupId>
-                <artifactId>gluonfx-maven-plugin</artifactId>
-                <version>${gluonfx.plugin.version}</version>
-                <configuration>
-                    <target>${gluonfx.target}</target>
-                    <mainClass>${main.class}</mainClass>
-                    <attachList>
-                        <list>display</list>
-                        <list>lifecycle</list>
-                        <list>position</list>
-                        <list>statusbar</list>
-                        <list>storage</list>
-                    </attachList>
-                </configuration>
-            </plugin>
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
